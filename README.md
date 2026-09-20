@@ -2,6 +2,10 @@
 
 NestJS e-commerce API for a store catalog, customers, orders, Stripe payments, and AWS S3 media. Built as a complete backend you can run locally and walk through in Swagger.
 
+The storefront and staff console live in a separate Next.js app:
+
+- **Frontend:** [ac-ecommerce-frontend](https://github.com/abdulbasit0-UI/ac-ecommerce-frontend)
+
 ## Stack
 
 - NestJS 11 + TypeScript
