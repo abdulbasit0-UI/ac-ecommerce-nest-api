@@ -1,0 +1,42 @@
+services:
+  api:
+    build:
+      context: .
+      target: development
+    container_name: ac-commerce-api-dev
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: development
+      APP_PORT: 3000
+      APP_URL: http://localhost:3000
+      FRONTEND_URL: http://localhost:3001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      MAIL_HOST: mailhog
+      MAIL_PORT: 1025
+      LOG_LEVEL: debug
+      LOG_PRETTY: "true"
+    ports:
+      - "3000:3000"
+      - "9229:9229"
+    volumes:
+      - ./src:/app/src
+      - ./nest-cli.json:/app/nest-cli.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./tsconfig.build.json:/app/tsconfig.build.json
+    command: ["npm", "run", "start:debug:docker"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health/live').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 8
+      start_period: 30s
